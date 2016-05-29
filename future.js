@@ -210,7 +210,14 @@ Future.prototype = {
 			throw new Error('Future must resolve before value is ready');
 		} else if (this.error) {
 			// Link the stack traces up
-			var error = this.error;
+			var error;
+			if (typeof this.error === 'object') {
+				error = this.error.message || JSON.stringify(this.error);
+			}
+			else {
+				error = this.error;
+			}
+
 			var localStack = {};
 			Error.captureStackTrace(localStack, Future.prototype.get);
 			var futureStack = Object.getOwnPropertyDescriptor(error, 'futureStack');
